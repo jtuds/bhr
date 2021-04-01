@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
 
 function FileLister(props) {
-  const [activeId, setActiveId] = useState(false);
+  const [activeId, setActiveId] = useState({});
   const [sort, setSort] = useState(false);
 
   const triggerSort = () => {
       if (!sort) {
           setSort(!sort)
       }        
+  }
+
+  const handleClick = (index) => {
+    setActiveId(prevState => ({
+      ...prevState,
+      [index]: activeId[index] === true ? false : true
+      })
+    );
+    console.log(activeId);
   }
 
   function displayItems(items) {
@@ -19,7 +28,7 @@ function FileLister(props) {
         if (item.type !== 'folder') {
           return <li key={index}>{item.name}</li>
         } else {
-          return <li key={index} onClick={() => setActiveId(index)} className={`c-filelister__has-children ${activeId === index ? 'active' : 'inactive'}`}>{item.name} <ul>{displayItems(item.files)}</ul></li>;
+          return <li key={index} onClick={() => handleClick(index)} className={`c-filelister__has-children ${activeId[index] ? 'active' : 'inactive'}`}>{item.name} <ul>{displayItems(item.files)}</ul></li>;
         }
       }));
     }
@@ -27,7 +36,7 @@ function FileLister(props) {
       if (item.type !== 'folder') {
         return <li key={index}>{item.name}</li>;
       } else {
-        return <li key={index} onClick={() => setActiveId(index)} className={`c-filelister__has-children ${activeId === index ? 'active' : 'inactive'}`}>{item.name} <ul>{displayItems(item.files)}</ul></li>;
+        return <li key={index} onClick={() => handleClick(index)} className={`c-filelister__has-children ${activeId[index] ? 'active' : 'inactive'}`}>{item.name} <ul>{displayItems(item.files)}</ul></li>;
       }
     }));
   };
